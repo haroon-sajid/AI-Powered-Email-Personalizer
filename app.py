@@ -1,16 +1,20 @@
 import streamlit as st
-from email_agent import generate_personalized_email
 import os
 
+# Ensure the GROQ_API_KEY is available before importing email_agent
+if "GROQ_API_KEY" not in os.environ:
+    if "GROQ_API_KEY" in st.secrets:
+        os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+    else:
+        st.error("Please set your GROQ_API_KEY in Streamlit secrets or as an environment variable.")
+        st.stop()
+
+# Import after the API key is guaranteed to be set
+from email_agent import generate_personalized_email
 
 
-# Check for Groq API key
-if "GROQ_API_KEY" not in st.secrets:
-    st.error("Please set your Groq API key in the Hugging Face Spaces secrets!")
-    st.stop()
 
-# Set the API key for the email agent
-os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
+
 
 # Set page config
 st.set_page_config(

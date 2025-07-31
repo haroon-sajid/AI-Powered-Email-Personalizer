@@ -61,3 +61,6 @@ An AI-powered email personalization tool that generates customized cold emails b
 ## Credits
 
 Created by Haroon Sajid using LangChain, LangGraph, and Groq's LLaMA 3 70B model.
+
+
+

@@ -5,12 +5,18 @@ from langgraph.graph import Graph, START, END
 from dotenv import load_dotenv
 import os
 
-# Initialize Groq model with LLaMA 3 70B
-model = ChatGroq(
-    model="llama3-70b-8192",  
-    temperature=0.7,
-    api_key=os.environ["GROQ_API_KEY"]
-)
+# Lazily initialize the Groq model so that the API key can be set at runtime (e.g. via Streamlit secrets)
+
+def _get_groq_model():
+    """Return a ChatGroq model instance, ensuring that the GROQ_API_KEY environment variable is set."""
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        raise ValueError("GROQ_API_KEY environment variable is not set. Please add it as an environment variable or in Streamlit secrets.")
+    return ChatGroq(
+        model="llama3-70b-8192",
+        temperature=0.7,
+        api_key=api_key,
+    )
 
 # Email prompt template
 EMAIL_PROMPT = """You are a professional email writer crafting a personalized cold email.
@@ -37,7 +43,9 @@ def format_prompt(inputs: Dict[str, Any]) -> Dict[str, Any]:
     return {"prompt": prompt.format_messages(**inputs)}
 
 def generate_email(inputs: Dict[str, Any]) -> Dict[str, Any]:
+    """Generate the email content using the Groq model."""
     messages = inputs["prompt"]
+    model = _get_groq_model()
     response = model.invoke(messages)
     return {"email": response.content}
 

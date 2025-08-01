@@ -5,7 +5,10 @@ from langgraph.graph import Graph, START, END
 from dotenv import load_dotenv
 import os
 
-# Lazily initialize the Groq model so that the API key can be set at runtime (e.g. via Streamlit secrets)
+# Load environment variables from .env when running locally
+load_dotenv()
+
+# Lazily initialize the Groq model so that the API key can be set at runtime
 
 def _get_groq_model():
     """Return a ChatGroq model instance, ensuring that the GROQ_API_KEY environment variable is set."""

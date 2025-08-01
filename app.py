@@ -1,18 +1,17 @@
 import streamlit as st
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from a local .env file, if present
+load_dotenv()
 
 # Ensure the GROQ_API_KEY is available before importing email_agent
-if "GROQ_API_KEY" in st.secrets or "GROQ_API_KEY" in os.environ:
-    os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
-else:
-    st.error("Please set your GROQ_API_KEY in Streamlit secrets or as an environment variable.")
+if "GROQ_API_KEY" not in os.environ:
+    st.error("Please set GROQ_API_KEY in a .env file or as an environment variable before running the app.")
     st.stop()
 
 # Import after the API key is guaranteed to be set
 from email_agent import generate_personalized_email
-
-
-
 
 
 # Set page config
